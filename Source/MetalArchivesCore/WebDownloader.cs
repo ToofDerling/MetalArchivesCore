@@ -2,7 +2,7 @@
 
 namespace MetalArchivesCore
 {
-    public class WebDownloader
+    class WebDownloader
     {
         private static HttpClient HttpClient { get; set; }
 
