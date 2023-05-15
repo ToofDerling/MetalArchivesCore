@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\WebsiteParserCore\Source\WebsiteParserCore\WebsiteParserCore.csproj" />
+  </ItemGroup>
+
 </Project>

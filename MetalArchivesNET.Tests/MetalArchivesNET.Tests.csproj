@@ -100,12 +100,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MetalArchivesNET\MetalArchivesNET.csproj">
-      <Project>{1cd0152e-bbba-4caf-bbb1-2c57a33272b7}</Project>
-      <Name>MetalArchivesNET</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
