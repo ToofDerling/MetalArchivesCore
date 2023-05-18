@@ -1,8 +1,5 @@
 ﻿using MetalArchivesCore.Parsers;
 using MetalArchivesCore.Searchers.Configurators.Abstract;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MetalArchivesCore.Searchers
 {
@@ -26,23 +23,7 @@ namespace MetalArchivesCore.Searchers
         /// <returns>List of items result - without pagination, all rows at once</returns>
         public IEnumerable<T> ByName(string name)
         {
-            List<T> items = new List<T>();
-            _configurator.Parameters["query"] = name;
-            var wd = new WebDownloader(_configurator.Url, _configurator.Parameters);
-            IEnumerable<T> itemsToAdd;
-            int page = 0;
-
-            do
-            {
-                _configurator.Parameters["iDisplayStart"] = (page++ * 200).ToString();
-                var response = wd.DownloadData();
-
-                itemsToAdd = ProcessParse(response);
-                items.AddRange(itemsToAdd);
-            }
-            while (itemsToAdd.Count() != 0);
-
-            return items;
+            return ByNameAsync(name).Result;
         }
 
         /// <summary>
@@ -60,7 +41,7 @@ namespace MetalArchivesCore.Searchers
 
             do
             {
-                _configurator.Parameters["iDisplayStart"] = page++.ToString();
+                _configurator.Parameters["iDisplayStart"] = (page++ * 200).ToString();
                 var response = await wd.DownloadDataAsync();
 
                 itemsToAdd = ProcessParse(response);
@@ -77,6 +58,5 @@ namespace MetalArchivesCore.Searchers
 
             return parser.Parse(content);
         }
-
     }
 }
