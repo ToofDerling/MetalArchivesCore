@@ -31,13 +31,14 @@ namespace MetalArchivesCore.Models.Results.SearchResults
         [EnumConverter(typeof(AlbumType))]
         public AlbumType AlbumType { get; set; }
 
+        // These two slso needs to handle <span title="This band participates on a split, but is not listed on the site."
+
         [Column(0)]
-        [RegexConverter(@"<a.*?>(.+?)</a>")]
+        [RegexConverter(@"<.*>(.+?)</.*>")] 
         public string BandName { get; set; }
 
         [Column(0)]
-        [RegexConverter("<a href=\"(.*?)\".*>")]
+        [RegexConverter("<.*? .*=\"(.*?)\".*>")]
         public override string BandUrl { get; set; }
-
     }
 }
