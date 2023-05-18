@@ -23,7 +23,9 @@ namespace MetalArchivesCore.Attributes
             var match = Regex.Match(value, _regex);
 
             if (!match.Success)
-                throw new Exception("regex parse went wrong");
+            {
+                throw new Exception($"Regex parse error [{_regex}] -> [{value}]");
+            }
 
             return match.Groups[1].Value;
         }
