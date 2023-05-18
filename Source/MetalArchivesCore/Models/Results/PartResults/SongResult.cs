@@ -47,7 +47,7 @@ namespace MetalArchivesCore.Models.Results.PartResults
         /// If song is instrumental
         /// </summary>
         [Selector("td:nth-child(4)")]
-        [Remove("&nbsp;\r\n", RemoverValueType.Text)]
+        [Remove("&nbsp;", RemoverValueType.Text)]
         [CompareValue("instrumental", true)]
         public bool IsInstrumental { get; set; }
 
@@ -55,7 +55,7 @@ namespace MetalArchivesCore.Models.Results.PartResults
         /// If song has added lyrics
         /// </summary>
         [Selector("td:nth-child(4)")]
-        [Remove("&nbsp;\r\n", RemoverValueType.Text)]
+        [Remove("&nbsp;", RemoverValueType.Text)]
         [CompareValue("Show lyrics", true)]
         public bool HasLyrics { get; set; }
 
