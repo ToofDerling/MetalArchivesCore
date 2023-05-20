@@ -1,40 +1,52 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text.RegularExpressions;
 using WebsiteParserCore.Converters.Abstract;
 
 namespace MetalArchivesCore.CustomWebsiteConverters
 {
     class AlbumDateTimeConverter : IConverter
     {
+        private const int _defaultDay = 1;
+        private const int _defaultMonth = 7;
+
+        private const string _months = "January|February|March|April|May|June|July|August|September|October|November|December";
+        private static readonly string[] _monthsArr = _months.Split('|');
+
         public object Convert(object input)
         {
-            string value = (string)input;
+            var value = (string)input;
 
-            value = value.Replace("th", "").Replace("st", "").Replace("nd", "").Replace("rd", "");
+            // This handles "November 29th, 2019", "November, 2019", "November 2019", "2019"
+            var match = Regex.Match(value, $"(?<month>{_months})?(,)?( )?((?<day>\\d{{1,2}})(th|st|nd|rd),)?( )?(?<year>\\d{{4}})");
 
-            value = ReplaceMonths(value);
+            if (!match.Success)
+            {
+                return null;
+            }
 
-            return DateTime.ParseExact(value, "MM dd, yyyy", null);
+            var year = int.Parse(match.Groups["year"].Value);
+
+            var monthName = match.Groups["month"].Value;
+            var idx = string.IsNullOrEmpty(monthName) ? -1 : Array.FindIndex(_monthsArr, s => s == monthName);
+            var month = idx == -1 ? _defaultMonth : idx + 1;
+
+            var dayStr = match.Groups["day"].Value;
+            var day = string.IsNullOrEmpty(dayStr) ? _defaultDay : int.Parse(dayStr);
+
+            var albumDate = new DateTime(year, month, day);
+            return albumDate;
         }
-
-        private string ReplaceMonths(string input)
-        {
-            input = input.Replace("January", "01");
-            input = input.Replace("February", "02");
-            input = input.Replace("March", "03");
-            input = input.Replace("April", "04");
-            input = input.Replace("May", "05");
-            input = input.Replace("June", "06");
-            input = input.Replace("July", "07");
-            input = input.Replace("August", "08");
-            input = input.Replace("September", "09");
-            input = input.Replace("October", "10");
-            input = input.Replace("November", "11");
-            input = input.Replace("December", "12");
-
-            return input;
-        }
-
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
