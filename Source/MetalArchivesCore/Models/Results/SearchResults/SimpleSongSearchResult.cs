@@ -1,13 +1,6 @@
 ﻿using MetalArchivesCore.Attributes;
 using MetalArchivesCore.Models.Enums;
 using MetalArchivesCore.Models.Results.Abstract;
-using MetalArchivesCore.Models.Results.FullResults;
-using MetalArchivesCore.Parsers;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using WebsiteParserCore;
 
 namespace MetalArchivesCore.Models.Results.SearchResults
 {
