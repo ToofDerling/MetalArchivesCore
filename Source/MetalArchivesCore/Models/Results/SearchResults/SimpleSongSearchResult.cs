@@ -20,25 +20,29 @@ namespace MetalArchivesCore.Models.Results.SearchResults
         public string SongTitle { get; set; }
 
         [Column(1)]
-        [RegexConverter(@"<a.*?>(.+?)</a>")]
+        [RegexConverter(@"(?#AlbumName)<.*>(.+?)<.*>")]
         public string AlbumName { get; set; }
 
         [Column(1)]
-        [RegexConverter("<a href=\"(.*?)\".*>")]
+        [RegexConverter("(?#AlbumUrl)<a href=\"(.*?)\".*>")]
         public override string AlbumUrl { get; set; }
 
         [Column(2)]
         [EnumConverter(typeof(AlbumType))]
         public AlbumType AlbumType { get; set; }
 
-        // These two must also handle <span title="This band participates on a split, but is not listed on the site."
-
+        // Must also handle the "This band participates on a split, but is not listed on the site." span (see below)
         [Column(0)]
-        [RegexConverter(@"<.*>(.+?)</.*>")] 
+        [RegexConverter(@"(?#BandName)<.*>(.+?)</.*>")]
         public string BandName { get; set; }
 
+        // <a title=\"Dismal Reverie (US)\" href=\"https://www.metal-archives.com/bands/Dismal_Reverie/3540458856\">Dismal Reverie</a>
+        // <a href=\"https://www.metal-archives.com/bands/Dismal_Reverie/3540458856\" title=\"Dismal Reverie (US)\">Dismal Reverie</a>
+        // <a href=\"https://www.metal-archives.com/bands/Dismal_Reverie/3540458856\">Dismal Reverie</a>
+        // <span title =\"This band participates on a split, but is not listed on the site.\">Tsubaki</span>
+
         [Column(0)]
-        [RegexConverter("<.*? .*=\"(.*?)\".*>")]
+        [RegexConverter(@"(?#BandUrl)(?:(?:<a title=.*href="")|(?:<a href="")|(?:<span title=""))([^""]*)")]
         public override string BandUrl { get; set; }
     }
 }
