@@ -9,12 +9,15 @@ namespace MetalArchivesCore.Searchers
     /// <typeparam name="T">Search result class. Result will be deserialised as this class</typeparam>
     public class SimpleSearcher<T> where T : class, new()
     {
+        private readonly IConfigurator _configurator;
+
+        // MA pages results in chunks of 200 
+        private const int _pageSize = 200;
+
         internal SimpleSearcher(IConfigurator configurator)
         {
             _configurator = configurator;
         }
-
-        private readonly IConfigurator _configurator;
 
         /// <summary>
         /// Searches item by name.
@@ -33,30 +36,35 @@ namespace MetalArchivesCore.Searchers
         /// <returns>List of items result - without pagination, all rows at once</returns>
         public async Task<IEnumerable<T>> ByNameAsync(string name)
         {
-            List<T> items = new List<T>();
+            var items = new List<T>();
+
             _configurator.Parameters["query"] = name;
-            var wd = new WebDownloader(_configurator.Url, _configurator.Parameters);
-            IEnumerable<T> itemsToAdd;
-            int page = 0;
+            var downloader = new WebDownloader(_configurator.Url, _configurator.Parameters);
 
-            do
+            var parser = new ResponseParser<T>();
+            var page = 0;
+
+            while (true)
             {
-                _configurator.Parameters["iDisplayStart"] = (page++ * 200).ToString();
-                var response = await wd.DownloadDataAsync();
+                if (page > 0)
+                {
+                    var displayStart = (page * _pageSize).ToString();
+                    _configurator.Parameters["iDisplayStart"] = displayStart;
+                }
+                page++;
 
-                itemsToAdd = ProcessParse(response);
-                items.AddRange(itemsToAdd);
+                var responseData = await downloader.DownloadDataAsync();
+
+                var searchResponse = parser.Parse(responseData);
+                items.AddRange(searchResponse.Items);
+
+                if (searchResponse.iTotalRecords == 0 || searchResponse.Items.Count == 0 || items.Count >= searchResponse.iTotalRecords)
+                {
+                    break;
+                }
             }
-            while (itemsToAdd.Count() != 0);
 
             return items;
-        }
-
-        private IEnumerable<T> ProcessParse(string content)
-        {
-            var parser = new ResponseParser<T>();
-
-            return parser.Parse(content);
         }
     }
 }
