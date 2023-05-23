@@ -1,7 +1,9 @@
-﻿namespace MetalArchivesCore.Parsers.Abstract
+﻿using MetalArchivesCore.Models.Responses;
+
+namespace MetalArchivesCore.Parsers.Abstract
 {
     interface IParser<T> where T : class, new()
     {
-        T Parse(string content);
+        SearchResponse<T> Parse(string content);
     }
 }

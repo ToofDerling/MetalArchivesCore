@@ -2,70 +2,72 @@
 using MetalArchivesCore.Attributes.Abstract;
 using MetalArchivesCore.Models.Responses;
 using MetalArchivesCore.Parsers.Abstract;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace MetalArchivesCore.Parsers
 {
     /// <summary>
-    /// Parses input string by given typ
+    /// Parses input string by given type
     /// </summary>
     /// <typeparam name="T">Return type</typeparam>
-    class ResponseParser<T> : IParser<List<T>> where T : class, new()
+    class ResponseParser<T> : IParser<T> where T : class, new()
     {
+        private readonly List<Action<string[], T>> _assignList;
+
+        public ResponseParser()
+        {
+            _assignList = new List<Action<string[], T>>();
+
+            foreach (var prop in typeof(T).GetProperties())
+            {
+                var decorators = prop.GetCustomAttributes().OfType<FieldDecoratorBase>().ToList();
+
+                if (decorators.FirstOrDefault(d => d is ColumnAttribute) is ColumnAttribute column)
+                {
+                    var lastDecorator = (FieldDecoratorBase)column;
+
+                    foreach (var decorator in decorators.Except(new[] { column }))
+                    {
+                        decorator.SetDecorator(lastDecorator);
+                        lastDecorator = decorator;
+                    }
+
+                    _assignList.Add((list, model) =>
+                    {
+                        column.SetBaseValue(list[column.Index]);
+                        var value = lastDecorator.GetValue();
+                        prop.SetValue(model, value);
+                    });
+                }
+            }
+        }
+
         /// <summary>
         /// Parses class using attributes on it's properties. Props without <see cref="ColumnAttribute">ColumnAttribute</see>  won't be used in parsing engine
         /// </summary>
         /// <param name="content">Json string of <see cref="SearchResponse"/></param>
         /// <returns>Parsed list of element based</returns>
-        public List<T> Parse(string content)
+        public SearchResponse<T> Parse(string content)
         {
-            var response = JsonSerializer.Deserialize<SearchResponse>(content);
+            var response = JsonSerializer.Deserialize<SearchResponse<T>>(content);
 
-            List<Action<string[], T>> assignList = new List<Action<string[], T>>();
-
-            foreach (var prop in typeof(T).GetProperties())
-            {
-                var column = prop.GetCustomAttribute<ColumnAttribute>();
-                if (column != null)
-                {
-
-                    FieldDecoratorBase lastDecorator = column;
-                    List<FieldDecoratorBase> decorators = prop.GetCustomAttributes().Except(new List<Attribute> { column }).OfType<FieldDecoratorBase>().ToList();
-
-                    foreach (var dec in decorators)
-                    {
-                        dec.SetDecorator(lastDecorator);
-                        lastDecorator = dec;
-                    }
-
-                    assignList.Add((list, model) =>
-                    {
-                        column.SetBaseValue(list[column.Index]);
-                        object val = lastDecorator.GetValue();
-                        prop.SetValue(model, val);
-                    });
-                }
-            }
-
-            List<T> items = new List<T>();
+            var items = new List<T>();
 
             foreach (var respItem in response.aaData)
             {
-                T model = new T();
+                var model = new T();
 
-                foreach (var assignOperation in assignList)
+                foreach (var assignOperation in _assignList)
+                {
                     assignOperation(respItem, model);
+                }
 
                 items.Add(model);
             }
 
-            return items;
+            response.Items = items;
+            return response;
         }
-
     }
 }
