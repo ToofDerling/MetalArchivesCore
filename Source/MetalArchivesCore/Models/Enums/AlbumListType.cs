@@ -3,9 +3,13 @@
     public enum AlbumListType
     {
         All,
+
         Main,
+        
         Lives,
+        
         Demos,
+        
         Misc
     }
 }
