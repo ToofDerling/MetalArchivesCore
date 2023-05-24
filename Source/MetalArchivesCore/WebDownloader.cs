@@ -56,10 +56,7 @@ namespace MetalArchivesCore
         {
             var url = $"{_url}{GetParameters()}";
 
-            var response = await HttpClient.GetAsync(url).ConfigureAwait(false);
-            response.EnsureSuccessStatusCode();
-
-            var searchResponse = await response.Content.ReadFromJsonAsync<SearchResponse<T>>().ConfigureAwait(false);
+            var searchResponse = await HttpClient.GetFromJsonAsync<SearchResponse<T>>(url).ConfigureAwait(false);
             return searchResponse;
         }
 
