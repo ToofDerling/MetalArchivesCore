@@ -36,6 +36,10 @@ namespace MetalArchivesCore
         readonly string _url;
         readonly Dictionary<string, string> _parameters;
 
+        /// <summary>
+        /// This simply calls DownloadDataAsync().Result
+        /// </summary>
+        /// <returns></returns>
         public string DownloadData()
         {
             return DownloadDataAsync().Result;

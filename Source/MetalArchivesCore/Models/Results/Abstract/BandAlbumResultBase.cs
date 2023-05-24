@@ -1,8 +1,4 @@
 ﻿using MetalArchivesCore.Models.Results.FullResults;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 using WebsiteParserCore;
 
 namespace MetalArchivesCore.Models.Results.Abstract
@@ -20,8 +16,8 @@ namespace MetalArchivesCore.Models.Results.Abstract
         /// <returns>Parsed album's page</returns>
         public AlbumResult GetFullAlbum()
         {
-            WebDownloader downloader = new WebDownloader(AlbumUrl);
-            string content = downloader.DownloadData();
+            var downloader = new WebDownloader(AlbumUrl);
+            var content = downloader.DownloadData();
 
             return WebContentParser.Parse<AlbumResult>(content);
         }
@@ -32,8 +28,8 @@ namespace MetalArchivesCore.Models.Results.Abstract
         /// <returns>Parsed album's page</returns>
         public async Task<AlbumResult> GetFullAlbumAsync()
         {
-            WebDownloader downloader = new WebDownloader(AlbumUrl);
-            string content = await downloader.DownloadDataAsync();
+            var downloader = new WebDownloader(AlbumUrl);
+            var content = await downloader.DownloadDataAsync().ConfigureAwait(false);
 
             return WebContentParser.Parse<AlbumResult>(content);
         }
