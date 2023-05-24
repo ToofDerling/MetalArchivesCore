@@ -5,6 +5,7 @@ namespace MetalArchivesCore.Searchers.Configurators
     class SimpleSongConfigurators : IConfigurator
     {
         public string Url => @"https://www.metal-archives.com/search/ajax-song-search/";
+
         public Dictionary<string, string> Parameters { get; } = new Dictionary<string, string>
             {
                 // Only send the parameters that are actually needed (iDisplayStart is set by SimpleSearcher if results >200)

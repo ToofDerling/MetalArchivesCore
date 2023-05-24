@@ -8,15 +8,12 @@ namespace MetalArchivesCore
 
         public static void DisposeHttpClient()
         {
-            if (HttpClient != null)
+            try
             {
-                try
-                {
-                    HttpClient.Dispose();
-                }
-                catch
-                {
-                }
+                HttpClient?.Dispose();
+            }
+            catch
+            {
             }
         }
 

@@ -20,7 +20,7 @@ namespace MetalArchivesCore.Searchers
         }
 
         /// <summary>
-        /// Searches item by name.
+        /// Searches item by name. Shortcut for ByNameAsync(name).Result
         /// </summary>
         /// <param name="name">Item's name</param>
         /// <returns>List of items result - without pagination, all rows at once</returns>
@@ -53,7 +53,7 @@ namespace MetalArchivesCore.Searchers
                 }
                 page++;
 
-                var responseData = await downloader.DownloadDataAsync();
+                var responseData = await downloader.DownloadDataAsync().ConfigureAwait(false);
 
                 var searchResponse = parser.Parse(responseData);
                 items.AddRange(searchResponse.Items);

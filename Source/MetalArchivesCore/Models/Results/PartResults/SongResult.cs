@@ -77,9 +77,10 @@ namespace MetalArchivesCore.Models.Results.PartResults
             if (HasLyrics)
             {
                 var downloader = new WebDownloader($@"https://www.metal-archives.com/release/ajax-view-lyrics/id/{Id}");
+                var content = await downloader.DownloadDataAsync().ConfigureAwait(false);
 
                 var document = new HtmlDocument();
-                document.LoadHtml(await downloader.DownloadDataAsync());
+                document.LoadHtml(content);
 
                 lyrics = document.DocumentNode.InnerText.Trim();
             }

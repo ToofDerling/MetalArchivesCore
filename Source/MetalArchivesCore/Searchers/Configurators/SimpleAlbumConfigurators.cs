@@ -1,5 +1,4 @@
 ﻿using MetalArchivesCore.Searchers.Configurators.Abstract;
-using System.Collections.Generic;
 
 namespace MetalArchivesCore.Searchers.Configurators
 {
@@ -11,11 +10,12 @@ namespace MetalArchivesCore.Searchers.Configurators
         public string Url => @"https://www.metal-archives.com/search/ajax-album-search/";
         public Dictionary<string, string> Parameters { get; } = new Dictionary<string, string>
             {
+                // Only send the parameters that are actually needed (iDisplayStart is set by SimpleSearcher if results >200)
                 { "field", "title"},
-                { "sEcho", "1" },
-                { "iColumns", "3" },
-                { "iDisplayStart", "0" },
-                { "iDisplayLength", "200" }
+                //{ "sEcho", "1" },
+                //{ "iColumns", "3" },
+                //{ "iDisplayStart", "0" },
+                //{ "iDisplayLength", "200" }
             };
     }
 }
