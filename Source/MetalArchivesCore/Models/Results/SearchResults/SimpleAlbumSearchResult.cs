@@ -1,7 +1,6 @@
 ﻿using MetalArchivesCore.Attributes;
 using MetalArchivesCore.Models.Enums;
 using MetalArchivesCore.Models.Results.Abstract;
-using System;
 
 namespace MetalArchivesCore.Models.Results.SearchResults
 {
@@ -35,6 +34,5 @@ namespace MetalArchivesCore.Models.Results.SearchResults
         [RegexReplace(@"-00", "-01")]
         [DateTimeConverter("yyyy-MM-dd")]
         public DateTime? AlbumReleaseDate { get; set; }
-
     }
 }

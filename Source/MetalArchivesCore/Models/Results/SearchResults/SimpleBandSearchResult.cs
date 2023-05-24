@@ -1,8 +1,5 @@
 ﻿using MetalArchivesCore.Attributes;
 using MetalArchivesCore.Models.Results.Abstract;
-using MetalArchivesCore.Models.Results.FullResults;
-using System.Threading.Tasks;
-using WebsiteParserCore;
 
 namespace MetalArchivesCore.Models.Results.SearchResults
 {
