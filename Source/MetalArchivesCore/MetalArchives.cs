@@ -9,18 +9,21 @@ namespace MetalArchivesCore
         /// <summary>
         /// Search band
         /// </summary>
-        public static SimpleSearcher<SimpleBandSearchResult> Band => new SimpleSearcher<SimpleBandSearchResult>(new SimpleBandConfigurators());
+        public static SimpleSearcher<SimpleBandSearchResult> Band => new(new SimpleBandConfigurators());
 
         /// <summary>
         /// Search album
         /// </summary>
-        public static SimpleSearcher<SimpleAlbumSearchResult> Album => new SimpleSearcher<SimpleAlbumSearchResult>(new SimpleAlbumConfigurators());
+        public static SimpleSearcher<SimpleAlbumSearchResult> Album => new(new SimpleAlbumConfigurators());
 
         /// <summary>
         /// Search song
         /// </summary>
-        public static SimpleSearcher<SimpleSongSearchResult> Song => new SimpleSearcher<SimpleSongSearchResult>(new SimpleSongConfigurators());
+        public static SimpleSearcher<SimpleSongSearchResult> Song => new(new SimpleSongConfigurators());
 
-        public static void DisposeHttpClient() => WebDownloader.DisposeHttpClient();
+        /// <summary>
+        /// Close the Metal Archives downloader. 
+        /// </summary>
+        public static void CloseWebDownloader() => WebDownloader.DisposeHttpClient();
     }
 }

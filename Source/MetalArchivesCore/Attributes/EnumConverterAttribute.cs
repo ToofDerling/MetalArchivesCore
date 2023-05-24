@@ -16,7 +16,9 @@ namespace MetalArchivesCore.Attributes
         public EnumConverterAttribute(Type enumType)
         {
             if (!enumType.IsEnum)
+            {
                 throw new NotSupportedException("Type must be enum");
+            }
 
             _enumType = enumType;
         }
@@ -29,17 +31,17 @@ namespace MetalArchivesCore.Attributes
 
             foreach (var field in _enumType.GetFields())
             {
-                var attribute = Attribute.GetCustomAttribute(field,
-                    typeof(DescriptionAttribute)) as DescriptionAttribute;
-                if (attribute != null)
+                if (GetCustomAttribute(field, typeof(DescriptionAttribute)) is DescriptionAttribute attribute)
                 {
                     if (attribute.Description == value)
+
+                    {
                         return field.GetValue(null);
+                    }
                 }
-                else
+                else if (field.Name == value)
                 {
-                    if (field.Name == value)
-                        return field.GetValue(null);
+                    return field.GetValue(null);
                 }
             }
 

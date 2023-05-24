@@ -29,6 +29,5 @@ namespace MetalArchivesCore.Attributes
 
             return match.Groups[1].Value;
         }
-
     }
 }
