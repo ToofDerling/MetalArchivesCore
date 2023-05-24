@@ -1,21 +1,10 @@
-﻿using System.Web;
+﻿using System.Net;
 
 namespace MetalArchivesCore
 {
     class WebDownloader
     {
         private static HttpClient HttpClient { get; set; }
-
-        //private static void CreateHttpClient(CookieContainer cookies)
-        //{
-        //    var handler = new SocketsHttpHandler() { CookieContainer = cookies };
-        //    var client = new HttpClient(handler);
-
-        //    client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36");
-        //    client.Timeout = TimeSpan.FromMinutes(60);
-
-        //    HttpClient = client;
-        //}
 
         public static void DisposeHttpClient()
         {
@@ -54,23 +43,17 @@ namespace MetalArchivesCore
 
         public async Task<string> DownloadDataAsync()
         {
-            var url = PrepareUrl(_url, _parameters);
+            var url = $"{_url}{GetParameters()}";
 
-            var response = await HttpClient.GetAsync(url);
-
-            if (response.IsSuccessStatusCode)
-                return await response.Content.ReadAsStringAsync();
-            else
-                throw new Exception($"An error ocurred during performing the request. Response code: {response.StatusCode}");
+            var responseStr = await HttpClient.GetStringAsync(url).ConfigureAwait(false);
+            return responseStr;
         }
 
-        private string PrepareUrl(string url, Dictionary<string, string> parameters)
+        private string GetParameters()
         {
-            string p = parameters?.Count > 0
-                ? "?" + string.Join("&", parameters.Select(i => $"{i.Key}={HttpUtility.UrlEncode(i.Value)}"))
+            return _parameters.Count > 0
+                ? $"?{string.Join("&", _parameters.Select(p => $"{p.Key}={WebUtility.UrlEncode(p.Value)}"))}"
                 : string.Empty;
-
-            return url + p;
         }
     }
 }
