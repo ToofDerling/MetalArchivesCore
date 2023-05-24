@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using WebsiteParserCore.Converters.Abstract;
+﻿using WebsiteParserCore.Converters.Abstract;
 
 namespace MetalArchivesCore.CustomWebsiteConverters
 {
@@ -10,11 +6,11 @@ namespace MetalArchivesCore.CustomWebsiteConverters
     {
         public object Convert(object input)
         {
-            string value = (string)input;
+            var inputStr = (string)input;
 
             int hours, minutes, seconds;
 
-            var fragments = value.Split(':').Reverse();
+            var fragments = inputStr.Split(':').Reverse();
 
             hours = fragments.Count() == 3 ? int.Parse(fragments.ElementAt(2)) : 0;
             minutes = int.Parse(fragments.ElementAt(1));

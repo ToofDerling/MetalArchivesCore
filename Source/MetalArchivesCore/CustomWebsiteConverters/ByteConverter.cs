@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using WebsiteParserCore.Converters.Abstract;
+﻿using WebsiteParserCore.Converters.Abstract;
 
 namespace MetalArchivesCore.CustomWebsiteConverters
 {

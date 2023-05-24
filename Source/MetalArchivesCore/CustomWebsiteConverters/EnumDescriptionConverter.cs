@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
+﻿using System.ComponentModel;
 using WebsiteParserCore.Converters.Abstract;
 
 namespace MetalArchivesCore.CustomWebsiteConverters
@@ -10,19 +7,20 @@ namespace MetalArchivesCore.CustomWebsiteConverters
     {
         public object Convert(object input)
         {
+            var inputStr = (string)input;
+
             foreach (var field in typeof(T).GetFields())
             {
-                var attribute = Attribute.GetCustomAttribute(field,
-                    typeof(DescriptionAttribute)) as DescriptionAttribute;
-                if (attribute != null)
+                if (Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute)) is DescriptionAttribute attribute)
                 {
-                    if (attribute.Description == (string)input)
+                    if (attribute.Description == inputStr)
+                    {
                         return field.GetValue(null);
+                    }
                 }
-                else
+                else if (field.Name == inputStr)
                 {
-                    if (field.Name == (string)input)
-                        return field.GetValue(null);
+                    return field.GetValue(null);
                 }
             }
 

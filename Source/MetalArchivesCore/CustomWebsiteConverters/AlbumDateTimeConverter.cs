@@ -13,10 +13,10 @@ namespace MetalArchivesCore.CustomWebsiteConverters
 
         public object Convert(object input)
         {
-            var value = (string)input;
+            var inputStr = (string)input;
 
             // This handles "November 29th, 2019", "November, 2019", "November 2019", "2019"
-            var match = Regex.Match(value, $"(?<month>{_months})?(,)?( )?((?<day>\\d{{1,2}})(th|st|nd|rd),)?( )?(?<year>\\d{{4}})");
+            var match = Regex.Match(inputStr, $"(?<month>{_months})?(,)?( )?((?<day>\\d{{1,2}})(th|st|nd|rd),)?( )?(?<year>\\d{{4}})");
 
             if (!match.Success)
             {
@@ -26,7 +26,7 @@ namespace MetalArchivesCore.CustomWebsiteConverters
             var year = int.Parse(match.Groups["year"].Value);
 
             var monthName = match.Groups["month"].Value;
-            var idx = string.IsNullOrEmpty(monthName) ? -1 : Array.FindIndex(_monthsArr, s => s == monthName);
+            var idx = string.IsNullOrEmpty(monthName) ? -1 : Array.FindIndex(_monthsArr, str => str == monthName);
             var month = idx == -1 ? _defaultMonth : idx + 1;
 
             var dayStr = match.Groups["day"].Value;

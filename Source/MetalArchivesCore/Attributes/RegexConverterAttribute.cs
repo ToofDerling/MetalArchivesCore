@@ -18,7 +18,7 @@ namespace MetalArchivesCore.Attributes
 
         public override object GetValue()
         {
-            string value = (string)base.GetValue();
+            var value = (string)base.GetValue();
 
             var match = Regex.Match(value, _regex);
 

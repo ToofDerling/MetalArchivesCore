@@ -14,10 +14,9 @@ namespace MetalArchivesCore.Attributes
 
         public override object GetValue()
         {
-            string value = (string)base.GetValue();
+            var value = (string)base.GetValue();
 
             return DateTime.ParseExact(value, _format, null);
         }
-
     }
 }
