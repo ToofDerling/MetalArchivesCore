@@ -1,8 +1,5 @@
 ﻿using MetalArchivesCore.CustomWebsiteConverters;
 using MetalArchivesCore.Models.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using WebsiteParserCore.Attributes;
 using WebsiteParserCore.Attributes.StartAttributes;
 

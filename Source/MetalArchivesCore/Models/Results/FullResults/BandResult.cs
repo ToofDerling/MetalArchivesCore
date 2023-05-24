@@ -3,8 +3,6 @@ using MetalArchivesCore.CustomWebsiteConverters;
 using MetalArchivesCore.Models.Enums;
 using MetalArchivesCore.Models.Results.BandResults;
 using MetalArchivesCore.Models.Results.PartResults;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using WebsiteParserCore;
 using WebsiteParserCore.Attributes;
 using WebsiteParserCore.Attributes.Enums;
@@ -111,23 +109,13 @@ namespace MetalArchivesCore.Models.Results.FullResults
         [WebsiteParserModel(Selector = "#auditTrail")]
         public Metadata Metadata { get; set; }
 
-        #region Additional notes
         /// <summary>
-        /// If <see cref="NotesFullUrl"/> is not null, it returns full band's notes
+        /// If <see cref="NotesFullUrl"/> is not null, it returns full band's notes. Shortcut for GetFullNotesAsync().Result
         /// </summary>
         /// <returns>Band's notes</returns>
         public string GetFullNotes()
         {
-            if (string.IsNullOrEmpty(NotesFullUrl))
-                return string.Empty;
-
-            WebDownloader downloader = new WebDownloader(NotesFullUrl);
-            string content = downloader.DownloadData();
-
-            HtmlDocument doc = new HtmlDocument();
-            doc.LoadHtml(content);
-
-            return doc.DocumentNode.InnerText;
+            return GetFullNotesAsync().Result;
         }
 
         /// <summary>
@@ -137,28 +125,25 @@ namespace MetalArchivesCore.Models.Results.FullResults
         public async Task<string> GetFullNotesAsync()
         {
             if (string.IsNullOrEmpty(NotesFullUrl))
+            {
                 return string.Empty;
+            }
 
-            WebDownloader downloader = new WebDownloader(NotesFullUrl);
-            string content = await downloader.DownloadDataAsync();
+            var downloader = new WebDownloader(NotesFullUrl);
+            var content = await downloader.DownloadDataAsync().ConfigureAwait(false);
 
-            HtmlDocument doc = new HtmlDocument();
+            var doc = new HtmlDocument();
             doc.LoadHtml(content);
 
             return doc.DocumentNode.InnerText;
         }
-        #endregion
 
-        #region Methods
         /// <summary>
-        /// Gets list of band's albums simple list
+        /// Gets list of band's albums simple list. Shortcut for GetAlbumsAsync(type).Result
         /// </summary>
         public IEnumerable<AlbumBandResult> GetAlbums(AlbumListType type)
         {
-            WebDownloader wd = new WebDownloader($@"https://www.metal-archives.com/band/discography/id/{Id}/tab/" + type.ToString().ToLower());
-            string content = wd.DownloadData();
-
-            return WebContentParser.ParseList<AlbumBandResult>(content);
+            return GetAlbumsAsync(type).Result;
         }
 
         /// <summary>
@@ -166,12 +151,11 @@ namespace MetalArchivesCore.Models.Results.FullResults
         /// </summary>
         public async Task<IEnumerable<AlbumBandResult>> GetAlbumsAsync(AlbumListType type)
         {
-            WebDownloader wd = new WebDownloader($@"https://www.metal-archives.com/band/discography/id/{Id}/tab/" + type.ToString().ToLower());
-            string content = await wd.DownloadDataAsync();
+            var downloader = new WebDownloader($"{$@"https://www.metal-archives.com/band/discography/id/{Id}/tab/"}{type.ToString().ToLower()}");
+            var content = await downloader.DownloadDataAsync().ConfigureAwait(false);
 
             return WebContentParser.ParseList<AlbumBandResult>(content);
         }
-        #endregion
 
         //TODO: images
         //TODO: years active

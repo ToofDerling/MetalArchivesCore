@@ -37,7 +37,7 @@ namespace MetalArchivesCore
         readonly Dictionary<string, string> _parameters;
 
         /// <summary>
-        /// This simply calls DownloadDataAsync().Result
+        /// Shortcut for DownloadDataAsync().Result
         /// </summary>
         /// <returns></returns>
         public string DownloadData()

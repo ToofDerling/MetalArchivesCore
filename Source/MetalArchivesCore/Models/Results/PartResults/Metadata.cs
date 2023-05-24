@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using WebsiteParserCore.Attributes;
+﻿using WebsiteParserCore.Attributes;
 using WebsiteParserCore.Attributes.Enums;
 using WebsiteParserCore.Attributes.StartAttributes;
 using WebsiteParserCore.Converters;

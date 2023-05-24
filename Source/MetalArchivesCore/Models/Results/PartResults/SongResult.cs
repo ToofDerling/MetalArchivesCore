@@ -1,7 +1,5 @@
 ﻿using HtmlAgilityPack;
 using MetalArchivesCore.CustomWebsiteConverters;
-using System;
-using System.Threading.Tasks;
 using WebsiteParserCore.Attributes;
 using WebsiteParserCore.Attributes.Enums;
 using WebsiteParserCore.Attributes.StartAttributes;
@@ -60,24 +58,12 @@ namespace MetalArchivesCore.Models.Results.PartResults
         public bool HasLyrics { get; set; }
 
         /// <summary>
-        /// Gets actual song's lyrics
+        /// Gets actual song's lyrics. Shortcut for GetLyricsAsync().Result
         /// </summary>
         /// <returns>Lyrics or string.Empty if not exists</returns>
         public string GetLyrics()
         {
-            string lyrics = string.Empty;
-
-            if (HasLyrics)
-            {
-                WebDownloader wd = new WebDownloader($@"https://www.metal-archives.com/release/ajax-view-lyrics/id/{Id}");
-
-                HtmlDocument document = new HtmlDocument();
-                document.LoadHtml(wd.DownloadData());
-
-                lyrics = document.DocumentNode.InnerText.Trim();
-            }
-
-            return lyrics;
+            return GetLyricsAsync().Result;
         }
 
         /// <summary>
@@ -86,20 +72,19 @@ namespace MetalArchivesCore.Models.Results.PartResults
         /// <returns>Lyrics or string.Empty if not exists</returns>
         public async Task<string> GetLyricsAsync()
         {
-            string lyrics = string.Empty;
+            var lyrics = string.Empty;
 
             if (HasLyrics)
             {
-                WebDownloader wd = new WebDownloader($@"https://www.metal-archives.com/release/ajax-view-lyrics/id/{Id}");
+                var downloader = new WebDownloader($@"https://www.metal-archives.com/release/ajax-view-lyrics/id/{Id}");
 
-                HtmlDocument document = new HtmlDocument();
-                document.LoadHtml(await wd.DownloadDataAsync());
+                var document = new HtmlDocument();
+                document.LoadHtml(await downloader.DownloadDataAsync());
 
                 lyrics = document.DocumentNode.InnerText.Trim();
             }
 
             return lyrics;
         }
-
     }
 }

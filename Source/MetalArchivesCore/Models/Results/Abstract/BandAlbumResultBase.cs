@@ -11,15 +11,12 @@ namespace MetalArchivesCore.Models.Results.Abstract
         public abstract string AlbumUrl { get; set; }
 
         /// <summary>
-        /// Get album's page
+        /// Get album's page. Shortcut for GetFullAlbumAsync().Result
         /// </summary>
         /// <returns>Parsed album's page</returns>
         public AlbumResult GetFullAlbum()
         {
-            var downloader = new WebDownloader(AlbumUrl);
-            var content = downloader.DownloadData();
-
-            return WebContentParser.Parse<AlbumResult>(content);
+            return GetFullAlbumAsync().Result;
         }
 
         /// <summary>

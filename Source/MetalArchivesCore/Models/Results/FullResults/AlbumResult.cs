@@ -2,12 +2,8 @@
 using MetalArchivesCore.Models.Enums;
 using MetalArchivesCore.Models.Results.Abstract;
 using MetalArchivesCore.Models.Results.PartResults;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using WebsiteParserCore.Attributes;
 using WebsiteParserCore.Attributes.StartAttributes;
-using WebsiteParserCore.Converters;
 
 namespace MetalArchivesCore.Models.Results.FullResults
 {
