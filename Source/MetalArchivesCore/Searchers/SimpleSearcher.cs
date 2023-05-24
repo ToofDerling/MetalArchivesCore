@@ -1,4 +1,5 @@
-﻿using MetalArchivesCore.Parsers;
+﻿using MetalArchivesCore.Models.Responses;
+using MetalArchivesCore.Parsers;
 using MetalArchivesCore.Searchers.Configurators.Abstract;
 
 namespace MetalArchivesCore.Searchers
@@ -53,9 +54,9 @@ namespace MetalArchivesCore.Searchers
                 }
                 page++;
 
-                var responseData = await downloader.DownloadDataAsync().ConfigureAwait(false);
+                var searchResponse = await downloader.DownloadJsonAsync<T>().ConfigureAwait(false);
 
-                var searchResponse = parser.Parse(responseData);
+                parser.ParseItems(searchResponse);
                 items.AddRange(searchResponse.Items);
 
                 if (searchResponse.iTotalRecords == 0 || searchResponse.Items.Count == 0 || items.Count >= searchResponse.iTotalRecords)

@@ -69,5 +69,31 @@ namespace MetalArchivesCore.Parsers
             response.Items = items;
             return response;
         }
+
+        /// <summary>
+        /// Parses class using attributes on it's properties. Props without <see cref="ColumnAttribute">ColumnAttribute</see>  won't be used in parsing engine
+        /// </summary>
+        /// <param name="content">Json string of <see cref="SearchResponse"/></param>
+        /// <returns>Parsed list of element based</returns>
+        public void ParseItems(SearchResponse<T> response)
+        {
+            //var response = JsonSerializer.Deserialize<SearchResponse<T>>(content);
+
+            var items = new List<T>();
+
+            foreach (var respItem in response.aaData)
+            {
+                var model = new T();
+
+                foreach (var assignOperation in _assignList)
+                {
+                    assignOperation(respItem, model);
+                }
+
+                items.Add(model);
+            }
+
+            response.Items = items;
+        }
     }
 }

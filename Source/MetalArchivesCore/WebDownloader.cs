@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using MetalArchivesCore.Models.Responses;
+using System.Net;
+using System.Net.Http.Json;
 
 namespace MetalArchivesCore
 {
@@ -48,6 +50,17 @@ namespace MetalArchivesCore
 
             var responseStr = await HttpClient.GetStringAsync(url).ConfigureAwait(false);
             return responseStr;
+        }
+
+        public async Task<SearchResponse<T>> DownloadJsonAsync<T>()
+        {
+            var url = $"{_url}{GetParameters()}";
+
+            var response = await HttpClient.GetAsync(url).ConfigureAwait(false);
+            response.EnsureSuccessStatusCode();
+
+            var searchResponse = await response.Content.ReadFromJsonAsync<SearchResponse<T>>().ConfigureAwait(false);
+            return searchResponse;
         }
 
         private string GetParameters()
